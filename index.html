@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090a10">
+<title>API Explorer | Dev Tools</title>
+<style>
+:root {
+  --bg: #090a10;
+  --panel: #12141e;
+  --green: #43ff9b;
+  --purple: #a970ff;
+  --text: #f2f3f8;
+  --muted: #9295a8;
+  --border: #292c3a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 10% 0%, #43ff9b12, transparent 35%),
+              radial-gradient(ellipse at 100% 100%, #a970ff18, transparent 35%),
+              var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+}
+header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 22px 7%; border-bottom: 1px solid #ffffff15;
+}
+.logo { font-family: monospace; font-size: 22px; font-weight: bold; }
+.logo span { color: var(--green); }
+.tag {
+  font: 11px monospace; color: var(--purple);
+  border: 1px solid #a970ff55; padding: 7px 10px; border-radius: 20px;
+}
+main { width: min(950px, 92%); margin: 55px auto; }
+.eyebrow { color: var(--green); font: 12px monospace; letter-spacing: 2px; margin-bottom: 16px; }
+h1 { font-size: clamp(34px, 6vw, 52px); letter-spacing: -2px; margin-bottom: 15px; }
+h1 span { color: var(--green); }
+.intro { color: var(--muted); line-height: 1.8; max-width: 600px; margin-bottom: 32px; }
+.panel {
+  background: #12141eeb; border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px; margin-bottom: 20px;
+}
+.panel h2 { font-size: 17px; margin-bottom: 8px; }
+.description { color: var(--muted); font-size: 13px; line-height: 1.7; margin-bottom: 20px; }
+label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 9px; }
+select, input {
+  width: 100%; background: #090b12; border: 1px solid var(--border);
+  border-radius: 9px; color: var(--text); padding: 13px; font: inherit;
+  outline: none; margin-bottom: 16px;
+}
+select:focus, input:focus { border-color: var(--purple); }
+button {
+  border: 0; border-radius: 9px; padding: 13px 18px;
+  background: var(--green); color: #07130c; font-weight: 800;
+  cursor: pointer; transition: .2s;
+}
+button:hover { transform: translateY(-2px); filter: brightness(1.05); }
+button:disabled { opacity: .55; cursor: wait; transform: none; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; }
+.secondary { background: #202230; color: var(--text); border: 1px solid var(--border); }
+.endpoint {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: #090b12; border: 1px solid var(--border);
+  border-radius: 9px; padding: 12px; margin-bottom: 18px;
+  overflow-wrap: anywhere;
+}
+.method {
+  color: var(--green); font: bold 12px monospace;
+  background: #43ff9b13; padding: 6px 8px; border-radius: 5px;
+}
+#endpoint { font: 12px monospace; color: #d7d9e5; flex: 1; }
+.status-row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 12px; font: 12px monospace; }
+#status { color: var(--muted); }
+#time { color: var(--purple); }
+#output {
+  min-height: 150px; max-height: 480px; overflow: auto;
+  background: #08090e; border: 1px solid #242737;
+  border-radius: 10px; padding: 18px;
+  color: var(--green); font: 12px/1.8 monospace;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.hint { color: var(--muted); font-size: 12px; line-height: 1.7; margin-top: 13px; }
+footer {
+  text-align: center; padding: 25px; color: #777b8d;
+  font-size: 11px; border-top: 1px solid #ffffff12;
+}
+footer span { color: var(--green); }
+@media (max-width: 500px) {
+  header { padding: 18px 5%; }
+  main { margin: 35px auto; }
+  .panel { padding: 18px; }
+  .controls button { flex: 1; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">api<span>explorer</span>_</div>
+  <div class="tag">DEV TOOLS / 01</div>
+</header>
+
+<main>
+  <p class="eyebrow">// CONNECT. REQUEST. EXPLORE.</p>
+  <h1>Explore o mundo das <span>APIs.</span></h1>
+  <p class="intro">
+    Faça requisições reais, visualize respostas JSON e descubra como
+    aplicações trocam informações pela internet.
+  </p>
+
+  <section class="panel">
+    <h2>01. Configurar requisição</h2>
+    <p class="description">
+      Escolha um endpoint de demonstração ou informe uma URL pública
+      que permita requisições pelo navegador.
+    </p>
+
+    <label for="preset">API de demonstração</label>
+    <select id="preset">
+      <option value="posts">Posts de exemplo</option>
+      <option value="users">Usuários de exemplo</option>
+      <option value="comments">Comentários</option>
+      <option value="todos">Lista de tarefas</option>
+      <option value="custom">Minha própria URL</option>
+    </select>
+
+    <label for="url">Endpoint (URL)</label>
+    <input id="url" type="url"
+      value="https://jsonplaceholder.typicode.com/posts"
+      placeholder="https://api.exemplo.com/dados">
+
+    <div class="controls">
+      <button id="send">▶ ENVIAR REQUISIÇÃO</button>
+      <button id="clear" class="secondary">LIMPAR</button>
+    </div>
+    <p class="hint">
+      Método HTTP: GET. As APIs de exemplo usam dados fictícios e não exigem login.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>02. Resposta do servidor</h2>
+    <p class="description">O resultado da requisição aparecerá abaixo.</p>
+    <div class="status-row">
+      <span id="status">STATUS: AGUARDANDO</span>
+      <span id="time">TEMPO: --</span>
+    </div>
+    <pre id="output">// Aguardando sua primeira requisição...</pre>
+    <p class="hint" id="count">Nenhum dado recebido.</p>
+  </section>
+</main>
+
+<footer>
+  <p>FEITO COM <span>♥</span> E JAVASCRIPT.</p>
+  <p>API EXPLORER © 2026 | KEEP BUILDING.</p>
+</footer>
+
+<script>
+const endpoints = {
+  posts: "https://jsonplaceholder.typicode.com/posts",
+  users: "https://jsonplaceholder.typicode.com/users",
+  comments: "https://jsonplaceholder.typicode.com/comments",
+  todos: "https://jsonplaceholder.typicode.com/todos"
+};
+
+const preset = document.getElementById("preset");
+const urlInput = document.getElementById("url");
+const sendButton = document.getElementById("send");
+const clearButton = document.getElementById("clear");
+const output = document.getElementById("output");
+const status = document.getElementById("status");
+const time = document.getElementById("time");
+const count = document.getElementById("count");
+
+preset.addEventListener("change", () => {
+  if (preset.value !== "custom") {
+    urlInput.value = endpoints[preset.value];
+  }
+});
+
+urlInput.addEventListener("input", () => {
+  const match = Object.keys(endpoints).find(
+    key => endpoints[key] === urlInput.value.trim()
+  );
+  preset.value = match || "custom";
+});
+
+sendButton.addEventListener("click", fetchData);
+
+async function fetchData() {
+  const url = urlInput.value.trim();
+
+  if (!url) {
+    status.textContent = "STATUS: INFORME UMA URL";
+    return;
+  }
+
+  let parsedUrl;
+
+  try {
+    parsedUrl = new URL(url);
+  } catch {
+    status.textContent = "STATUS: URL INVÁLIDA";
+    return;
+  }
+
+  if (!["https:", "http:"].includes(parsedUrl.protocol)) {
+    status.textContent = "STATUS: PROTOCOLO NÃO SUPORTADO";
+    return;
+  }
+
+  sendButton.disabled = true;
+  sendButton.textContent = "CONSULTANDO...";
+  status.textContent = "STATUS: ENVIANDO";
+  time.textContent = "TEMPO: ...";
+  output.textContent = "// Conectando à API...";
+  count.textContent = "Aguardando resposta do servidor.";
+
+  const start = performance.now();
+
+  try {
+    const response = await fetch(parsedUrl.href, {
+      method: "GET",
+      headers: { "Accept": "application/json" }
+    });
+
+    const elapsed = Math.round(performance.now() - start);
+    const raw = await response.text();
+
+    let data;
+    try {
+      data = JSON.parse(raw);
+      output.textContent = JSON.stringify(data, null, 2);
+    } catch {
+      output.textContent = raw || "(Resposta vazia)";
+    }
+
+    status.textContent = `STATUS: HTTP ${response.status} ${response.ok ? "✓" : "✕"}`;
+    status.style.color = response.ok ? "var(--green)" : "#ff8195";
+    time.textContent = `TEMPO: ${elapsed} ms`;
+
+    const total = Array.isArray(data) ? data.length : data ? 1 : 0;
+    count.textContent = Array.isArray(data)
+      ? `${total} registro(s) recebido(s).`
+      : `Resposta recebida: ${raw.length} caracteres.`;
+
+  } catch (error) {
+    status.textContent = "STATUS: FALHA NA REQUISIÇÃO";
+    status.style.color = "#ff8195";
+    time.textContent = "TEMPO: --";
+    output.textContent =
+      "Não foi possível consultar esta URL.\n\n" +
+      "Possíveis causas:\n" +
+      "• Falha de conexão.\n" +
+      "• A API não permite requisições de outros sites (CORS).\n" +
+      "• O endereço está incorreto ou o servidor está indisponível.\n\n" +
+      "Detalhe: " + error.message;
+
+    count.textContent = "Nenhum dado foi recebido.";
+  } finally {
+    sendButton.disabled = false;
+    sendButton.textContent = "▶ ENVIAR REQUISIÇÃO";
+  }
+}
+
+clearButton.addEventListener("click", () => {
+  output.textContent = "// Resultado limpo. Envie uma nova requisição.";
+  status.textContent = "STATUS: AGUARDANDO";
+  status.style.color = "var(--muted)";
+  time.textContent = "TEMPO: --";
+  count.textContent = "Nenhum dado recebido.";
+});
+</script>
+</body>
+</html>
